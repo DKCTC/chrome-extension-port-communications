@@ -13,12 +13,12 @@ Include **unified-portcommunications.js** in the manifest entry for the content 
 
 **Content script and browser action menu usage:**
 
-Follow the examples in **contentscript-sample-portcommunications.js**
+Follow the examples in *contentscript-sample-portcommunications.js*
 
 
 **Background page usage:**
 
-Follow the examples in **background-sample-portcommunications.js**
+Follow the examples in *background-sample-portcommunications.js*
 
 ## Support
 
