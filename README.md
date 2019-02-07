@@ -3,6 +3,8 @@ Script to unify the broadcast, port, and tab messaging functionality, adds abili
 
 Full documentation coming soon! For now, there are js files with some samples in them. There are also notes in the code itself.
 
+Tested through **Chrome 72**
+
 ## Usage
 
 Include **unified-portcommunications.js** in the manifest entry for the content script and the background page, or as a regular script in an extension page.
