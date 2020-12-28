@@ -3,11 +3,13 @@ Script to unify the broadcast, port, and tab messaging functionality, adds abili
 
 Full documentation coming soon! For now, there are js files with some samples in them. There are also notes in the code itself.
 
-Tested through **Chrome 72**
+Tested through **Chrome 87**
 
 ## Usage
 
 Include **unified-portcommunications.js** in the manifest entry for the content script and the background page, or as a regular script in an extension page.
+
+The jQuery dependency in the previous versions has been **removed**. jQuery is **NOT** required!
 
 **Suggested usage** - include this script on <all_urls> and the background page so that it'll be available to all content scripts. _This is required if you want to use **chrome-extension-codemirror-content-script** [GitHub](https://github.com/dkline03/chrome-extension-codemirror-content-script), **chrome-extension-unified-keydown** [GitHub](https://github.com/dkline03/chrome-extension-unified-keydown), or **chrome-extension-leap-motion-content-script** [GitHub](https://github.com/dkline03/chrome-extension-leap-motion-content-script)_
 
@@ -29,7 +31,7 @@ Please submit an issue.
 
 ## License
 
-Copyright (c) 2019 dkline03
+Copyright (c) 2021 dkline03
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
