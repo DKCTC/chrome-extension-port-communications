@@ -1,5 +1,4 @@
-
-//portCommunications script
+//unified-portcommunications.js
 //-unifies Chrome message passing functions
 //--port messages can now have callbacks
 //--both port and broadcast message listeners are used if the initial function cannot find the sent method
@@ -64,11 +63,11 @@ if(typeof(Port) == 'undefined'){
 					//if a string is sent, return only the ports that have a connection with that name
 					case(!!type && typeof(type) == 'string'):
 						var cPorts = {};
-						$.each(connectedPorts, function(i,v) {
-							if(!!v[type]){
-								cPorts[i] = v;
+						for(var i in connectedPorts){
+							if(!!connectedPorts[i][type]){
+								cPorts[i] = connectedPorts[i];
 							}//if
-						});
+						};
 						return cPorts;
 					break;
 					default:
@@ -101,20 +100,21 @@ if(typeof(Port) == 'undefined'){
 				_this.connected = (!!_this.actual);
 				//if the port exists, add the message listener if it does not have it yet
 				if(!!_this.actual){
-					if(!_this.actual.onMessage.hasListener()){
+					if(!_this.actual.onMessage.hasListener(portListener)){
+						//console.log(name+': >>>>>>>>>>>>>>>>>>>>> attach port listener:');
 						_this.actual.onMessage.addListener(portListener);
 					}//if
 				}//if connected
-					
+
 				return _this.connected;
 			};//func
 
 			//disconnect from the port
 			this.disconnect = function(){
-				//if it's not connected, do nothing
-				if(!checkConnected()){ return false; }
-				//do the disconnect on the actual port
-				_this.actual.disconnect();
+				//if it's not connected, do nothing	
+				if(!checkConnected()){ return false; }	
+				//do the disconnect on the actual port	
+				_this.actual.disconnect();	
 				//set flag to false
 				_this.connected = false;
 			};
@@ -136,8 +136,8 @@ if(typeof(Port) == 'undefined'){
 					connectedPorts[tabID][inPort.name] = { port: inPort, name: inPort.name, tabID:tabID };
 		
 					//set portListenerCallbacks
-					_this.portListenerCallbacks[tabID] = $.extend(callbacks,_this.portListenerCallbacks[tabID]);
-						
+					//-keep the existing callbacks that were already defined in the tab, which should never happen anyway
+					_this.portListenerCallbacks[tabID] = {...callbacks,..._this.portListenerCallbacks[tabID]};
 					//run the init callback if there is one
 					//-the init callback is set in the addOnConnectListener that runs in background.js
 					//-the function below is passed to sendResponse in background.js
@@ -145,7 +145,7 @@ if(typeof(Port) == 'undefined'){
 						listeners.init(inPort, tabID, function (initMsg) {
 							inPort.postMessage(initMsg);
 						});
-						
+
 					//the message listener
 					inPort.onMessage.addListener(function(msg){
 						_debug([name+': ===> inPort post msg received: '+msg.method,msg]);
@@ -208,16 +208,18 @@ if(typeof(Port) == 'undefined'){
 				};//onConnect
 
 				//add the onconnect listener
-				if(!chrome.runtime.onConnect.hasListener()){
+				if(!chrome.runtime.onConnect.hasListener(onConnectListener)){
 					chrome.runtime.onConnect.addListener(onConnectListener);
 				}//if
 				//add the listener for chrome apps
-				if(!!chrome.runtime.onConnectExternal && !chrome.runtime.onConnectExternal.hasListener()){
+				if(!!chrome.runtime.onConnectExternal && !chrome.runtime.onConnectExternal.hasListener(function(inPort){
+						onConnectListener(inPort,true);
+					})){
 					chrome.runtime.onConnectExternal.addListener(function(inPort){
 						onConnectListener(inPort,true);
 					});
 				}//if
-			}//func
+			}//func addOnConnectListener
 			
 			//check status of connection
 			var checkConnected = function(init){
@@ -231,7 +233,7 @@ if(typeof(Port) == 'undefined'){
 						return true;
 					break;
 				}//switch
-			}
+			};//func checkConnected
 			
 			//outgoing port.postMessages go through the actual port and this function
 			this.postMessage = function(msg,callback){
@@ -264,15 +266,15 @@ if(typeof(Port) == 'undefined'){
 			//attach the port listeners
 			this.addPortListener = function(obj){
 				if(typeof(obj) == 'object'){
-					$.each(obj,function(i,v){
-						if(typeof(v) == 'function'){
-							_this.portListenerCallbacks[i] = v;
+					for(var i in obj){
+						if(typeof(obj[i]) == 'function'){
+							_this.portListenerCallbacks[i] = obj[i];
 						} else {
 							_debug(name+': Port addPortListener error: Invalid function: '+i+', you require a new function',true);
 						}//if
-					});
+					};
 				}//if
-			};
+			};//func addPortListener
 			//process port messages
 			var portListener = function(msg) {
 				_debug([name+': ===> Port post msg received: '+msg.method+' | callbackID: '+msg.callbackID,msg]);
@@ -305,7 +307,7 @@ if(typeof(Port) == 'undefined'){
 						_debug(name+': No default port message action specified: '+msg.method);
 					break;
 				}//switch
-			};
+			};//func portListener
 			//send tab message
 			this.tabMessage = function(tabID, msg,callback){
 				(!!chrome.tabs && !!chrome.tabs.sendMessage) ? 
@@ -318,13 +320,13 @@ if(typeof(Port) == 'undefined'){
 			//add broadcast listener
 			this.addBroadcastListener = function(obj){
 				if(typeof(obj) == 'object'){
-					$.each(obj,function(i,v){
-						if(typeof(v) == 'function'){
-							_this.broadcastCallbacks[i] = v;
+					for(var i in obj){
+						if(typeof(obj[i]) == 'function'){
+							_this.broadcastCallbacks[i] = obj[i];
 						} else {
 							_debug(name+': Port addBroadcastListener error: Invalid function: '+i+', you require a new function',true);
 						}//if
-					});
+					};
 				}//if
 			};
 			//process the broadcast listener
@@ -346,7 +348,7 @@ if(typeof(Port) == 'undefined'){
 						_debug(name+': No default broadcast message action specified: '+msg.method);
 					break;
 				}//switch
-			};
+			};//func broadcastListener
 			//attach the listener function
 			chrome.runtime.onMessage.addListener(broadcastListener);
 			//also attach to chrome app
@@ -388,5 +390,5 @@ if(typeof(Port) == 'undefined'){
 			}//if
 			//return the reference
 			return this;
-		};
+		};//func Port
 }//if Port undefined
