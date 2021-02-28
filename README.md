@@ -11,7 +11,7 @@ Include **unified-portcommunications.js** in the manifest entry for the content 
 
 The jQuery dependency in the previous versions has been **removed**. jQuery is **NOT** required!
 
-**Suggested usage** - include this script on <all_urls> and the background page so that it'll be available to all content scripts. _This is required if you want to use **chrome-extension-codemirror-content-script** [GitHub](https://github.com/dkline03/chrome-extension-codemirror-content-script), **chrome-extension-unified-keydown** [GitHub](https://github.com/dkline03/chrome-extension-unified-keydown), or **chrome-extension-leap-motion-content-script** [GitHub](https://github.com/dkline03/chrome-extension-leap-motion-content-script)_
+**Suggested usage** - include this script on <all_urls> and the background page so that it'll be available to all content scripts. _This is required if you want to use **chrome-extension-codemirror-content-script** [GitHub](https://github.com/DKCTC/chrome-extension-codemirror-content-script), **chrome-extension-unified-keydown** [GitHub](https://github.com/DKCTC/chrome-extension-unified-keydown), or **chrome-extension-leap-motion-content-script** [GitHub](https://github.com/DKCTC/chrome-extension-leap-motion-content-script)_
 
 ### Sample usage:
 
@@ -31,7 +31,7 @@ Please submit an issue.
 
 ## License
 
-Copyright (c) 2021 dkline03
+Copyright (c) 2021 DKCTC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
